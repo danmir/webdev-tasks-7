@@ -1,0 +1,8 @@
+.idea
+/*.env
+node_modules
+public/
+dist/
+static/
+npm-debug.log
+libs/
