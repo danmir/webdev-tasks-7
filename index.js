@@ -10,7 +10,7 @@ const bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
 
 var app = new (require('express'))();
-var port = 3000;
+app.set('port', (process.env.PORT || 3000));
 
 var compiler = webpack(config);
 app.use(webpackDevMiddleware(compiler, {noInfo: false, publicPath: config.output.publicPath}));
@@ -50,11 +50,11 @@ app.get("/", function (req, res) {
     res.sendFile(__dirname + '/dist/page.html')
 });
 
-app.listen(port, function (error) {
+app.listen(app.get('port'), function (error) {
     if (error) {
         console.error(error)
     } else {
-        console.info("==> Listening on port %s. Open up http://localhost:%s/ in your browser.", port, port)
+        console.info("==> Listening on port %s. Open up http://localhost:%s/ in your browser.", app.get('port'), app.get('port'))
     }
 });
 module.exports = app;
