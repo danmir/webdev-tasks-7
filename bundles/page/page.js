@@ -7,6 +7,8 @@ var state;
 var satietyChanger;
 var energyChanger;
 var moodChanger;
+var decSpeed = 3000;
+var incSpeed = 1000;
 
 var EventEmitter = require('wolfy87-eventemitter');
 var ee = new EventEmitter();
@@ -68,17 +70,17 @@ function preparePig() {
         changeVal('dec', state, 'satiety');
         printVal(state, 'satiety');
         saveState();
-    }, 9000);
+    }, decSpeed);
     energyChanger = setInterval(() => {
         changeVal('dec', state, 'energy');
         printVal(state, 'energy');
         saveState();
-    }, 9000);
+    }, decSpeed);
     moodChanger = setInterval(() => {
         changeVal('dec', state, 'mood');
         printVal(state, 'mood');
         saveState();
-    }, 9000);
+    }, decSpeed);
 }
 if (!state) {
     preparePig();
@@ -96,18 +98,14 @@ startOverButton.onclick = () => {
 var Snap = require("imports-loader?this=>window,fix=>module.exports=0!./snap.svg");
 var s = Snap("#pig-svg");
 
-Snap.load('static/sleep.svg', function (response) {
-    var sleepSvg = response;
-    s.append(sleepSvg);
-    var sleep = s.select('#Sleep');
-    sleep.animate({
-        opacity: '0'
-    }, 10);
-});
-
 Snap.load('static/pig.svg', function (response) {
-    var pig = response;
-    s.append(pig);
+    var pigSvg = response;
+    s.append(pigSvg);
+    //var pig = s.select('#Pig');
+    var sleep = s.select('#Sleep');
+    sleep.attr({
+        opacity: 0
+    });
 });
 
 function printVal(state, param) {
@@ -143,30 +141,31 @@ function sleepingHandler(toState) {
         clearInterval(energyChanger);
         energyChanger = setInterval(() => {
             var sleep = s.select('#Sleep');
-            sleep.animate({
-                opacity: '0'
-            }, 10, mina.easeinout);
+            if (sleep.attr('opacity') === '1') {
+                sleep.animate({
+                    opacity: '0'
+                }, 100, mina.easeinout);
+            }
 
             changeVal('dec', state, 'energy');
             printVal(state, 'energy');
             saveState();
-        }, 9000);
+        }, decSpeed);
     }
     if (toState === 'start') {
         state.isSleeping = true;
         clearInterval(energyChanger);
         energyChanger = setInterval(() => {
             var sleep = s.select('#Sleep');
+            if (sleep.attr('opacity') === '0') {
+                sleep.attr({opacity: 1});
+            }
             sleep.animate({
-                opacity: '1'
-            }, 10, mina.easeinout, () => {
+                transform: 'scale(1.5, 1.5)'
+            }, 500, mina.easeinout, () => {
                 sleep.animate({
-                    transform: 'translate(200, -12)'
-                }, 100, mina.easeinout, () => {
-                    sleep.animate({
-                        transform: 'translate(0, -12)'
-                    }, 100, mina.easeinout)
-                });
+                    transform: 'scale(0.5, 0.5)'
+                }, 500, mina.easeinout)
             });
 
             changeVal('inc', state, 'energy');
@@ -175,7 +174,7 @@ function sleepingHandler(toState) {
             }
             printVal(state, 'energy');
             saveState();
-        }, 3000);
+        }, incSpeed);
     }
 }
 
@@ -193,7 +192,7 @@ function eatingHandler(toState) {
             changeVal('dec', state, 'satiety');
             printVal(state, 'satiety');
             saveState();
-        }, 9000);
+        }, decSpeed);
     }
     if (toState === 'start') {
         state.isEating = true;
@@ -226,7 +225,7 @@ function eatingHandler(toState) {
             }
             printVal(state, 'satiety');
             saveState();
-        }, 3000);
+        }, incSpeed);
     }
 }
 
@@ -244,7 +243,7 @@ function listeningHandler(toState) {
             changeVal('dec', state, 'mood');
             printVal(state, 'mood');
             saveState();
-        }, 9000);
+        }, decSpeed);
     }
     if (toState === 'start') {
         state.isListening = true;
@@ -256,7 +255,7 @@ function listeningHandler(toState) {
             }
             printVal(state, 'mood');
             saveState();
-        }, 3000);
+        }, incSpeed);
     }
 }
 
