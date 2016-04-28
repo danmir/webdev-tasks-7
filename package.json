@@ -17,7 +17,6 @@
   },
   "homepage": "https://github.com/danmir/webdev-tasks-7#readme",
   "dependencies": {
-    "babel": "^6.5.2",
     "babel-core": "^6.7.7",
     "body-parser": "^1.15.0",
     "cookie-parser": "^1.4.1",
