@@ -1,6 +1,5 @@
 require('file?name=page.html!./page.html');
 require('file?name=pig.svg!./pig.svg');
-require('file?name=sleep.svg!./sleep.svg');
 require('./page.css');
 
 function printVal(state, param) {
