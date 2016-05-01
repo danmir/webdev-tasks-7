@@ -4,6 +4,7 @@ var ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 module.exports = {
     entry: [
+        'babel-polyfill',
         'webpack-hot-middleware/client',
         './bundles/page/page'
     ],
@@ -21,9 +22,13 @@ module.exports = {
         loaders: [
             {
                 test: /\.js$/,
-                loaders: ['babel'],
+                loader: 'babel',
                 exclude: [/node_modules/, /snap.svg.js/],
-                include: __dirname
+                include: __dirname,
+                query: {
+                    presets: ['es2015', 'stage-0'],
+                    plugins: ['transform-runtime']
+                }
             },
             {
                 test: /\.css?$/,
